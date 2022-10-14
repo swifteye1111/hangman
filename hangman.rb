@@ -20,6 +20,8 @@ class Game
 
   def play_game(player, computer, display)
     display.show_display(computer)
+    computer.check_letter(player.make_guess)
+    display.show_display(computer)
   end
 end
 
@@ -30,7 +32,7 @@ class Player
 
   def make_guess
     # get guess from player, checking it hasn't been guessed already
-    # computer.check_letter(guess)
+    gets.chomp
   end
 end
 
@@ -44,19 +46,27 @@ class Computer
     @remaining_guesses = 10
     @letters_guessed = []
     puts @secret_word
-    puts @visible_letters
   end
 
   def take_turn(letter)
-    @visible_letters = check_letter('e')
+    @visible_letters = check_letter(letter)
+    Display.show_display(letter)
   end
 
   def check_letter(letter)
-      # check letter against secret_word,
-      # return visible_letters with letter filled in
-      #@secret_word.each_with_index do |char|
-      #  if char == letter
-      #end
+    # check letter against secret_word,
+    # return visible_letters with letter filled in
+    @letters_guessed.push(letter)
+    i = 0
+    @secret_word.each_char do |char|
+      @visible_letters[i] = letter if char == letter
+      i += 1
+    end
+    @remaining_guesses -= 1
+  end
+
+  def space_out_visible_letters
+    @visible_letters.gsub('_', '_ ').rstrip
   end
 
   private
@@ -70,7 +80,7 @@ class Computer
   end
 
   def generate_visible_letters
-    @visible_letters = @secret_word.gsub(/[a-zA-Z]/, '_ ').rstrip
+    @visible_letters = @secret_word.gsub(/[a-zA-Z]/, '_')
   end
 end
 
@@ -83,7 +93,7 @@ class Display
   end
 
   def show_display(comp)
-    puts "Secret word: #{comp.visible_letters}"
+    puts "Word: #{comp.space_out_visible_letters}"
     puts "You have #{comp.remaining_guesses} guesses remaining."
     puts "Letters guessed: #{comp.letters_guessed.join(' ')}" unless comp.letters_guessed.empty?
   end
