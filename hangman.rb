@@ -39,22 +39,39 @@ class Computer
   attr_reader :visible_letters, :remaining_guesses, :letters_guessed
 
   def initialize
-    @secret_word = ''
-    @visible_letters = '' # create string of _'s of length @secret_word.length
+    @secret_word = generate_secret_word
+    @visible_letters = generate_visible_letters # create string of _'s of length @secret_word.length
     @remaining_guesses = 10
     @letters_guessed = []
+    puts @secret_word
+    puts @visible_letters
   end
 
   def take_turn(letter)
-    @visible_letters = check_letter(letter)
+    @visible_letters = check_letter('e')
   end
 
-  def check_letter
+  def check_letter(letter)
       # check letter against secret_word,
       # return visible_letters with letter filled in
+      #@secret_word.each_with_index do |char|
+      #  if char == letter
+      #end
   end
 
+  private
 
+  def generate_secret_word
+    words = []
+    File.open('words.txt').readlines.each do |word|
+      words.push(word.strip) if word.length.between?(6, 13) # allow for newline chars
+    end
+    words.sample
+  end
+
+  def generate_visible_letters
+    @visible_letters = @secret_word.gsub(/[a-zA-Z]/, '_ ').rstrip
+  end
 end
 
 # Display:
@@ -66,9 +83,9 @@ class Display
   end
 
   def show_display(comp)
-    puts comp.visible_letters
-    puts "You have #{comp.remaining_guesses} remaining."
-    puts "Letters guessed: #{comp.letters_guessed.join(' ')}" if comp.letters_guessed
+    puts "Secret word: #{comp.visible_letters}"
+    puts "You have #{comp.remaining_guesses} guesses remaining."
+    puts "Letters guessed: #{comp.letters_guessed.join(' ')}" unless comp.letters_guessed.empty?
   end
 end
 
