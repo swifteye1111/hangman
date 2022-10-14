@@ -1,3 +1,4 @@
+require 'active_support/core_ext/enumerable'
 # load dictionary
 # randomly select word between 5-12 chars long, store as secret word
 
@@ -14,14 +15,16 @@ class Game
   def initialize
     @player = Player.new
     @computer = Computer.new
-    @display = Display.new
+    @display = Display.new(@computer)
     play_game(@player, @computer, @display)
   end
 
   def play_game(player, computer, display)
-    display.show_display(computer)
-    computer.check_letter(player.make_guess)
-    display.show_display(computer)
+    until computer.game_over?
+      computer.check_letter(player.make_guess(computer.letters_guessed))
+      display.show_display(computer) unless computer.game_over?
+    end
+    computer.send_outcome(display)
   end
 end
 
@@ -30,9 +33,18 @@ class Player
   def initialize
   end
 
-  def make_guess
-    # get guess from player, checking it hasn't been guessed already
-    gets.chomp
+  def make_guess(letters_guessed)
+    puts 'Choose a letter: '
+    guess = gets.chomp.downcase
+    until ('a'..'z').include?(guess) && letters_guessed.exclude?(guess)
+      if letters_guessed.include?(guess)
+        puts 'You already guessed that lettter. Please choose a new one: '
+      else
+        puts 'Please choose a single letter: '
+      end
+      guess = gets.chomp.downcase
+    end
+    guess
   end
 end
 
@@ -69,6 +81,16 @@ class Computer
     @visible_letters.gsub('_', '_ ').rstrip
   end
 
+  def game_over?
+    return true if @visible_letters == @secret_word || @remaining_guesses.zero?
+
+    return false
+  end
+
+  def send_outcome(display)
+    display.show_outcome(self, @secret_word)
+  end
+
   private
 
   def generate_secret_word
@@ -89,13 +111,22 @@ end
   # correct letters and position
   # incorrect letters already chosen
 class Display
-  def initialize
+  def initialize(comp)
+    show_display(comp)
   end
 
   def show_display(comp)
     puts "Word: #{comp.space_out_visible_letters}"
     puts "You have #{comp.remaining_guesses} guesses remaining."
     puts "Letters guessed: #{comp.letters_guessed.join(' ')}" unless comp.letters_guessed.empty?
+  end
+
+  def show_outcome(comp, secret_word)
+    if comp.remaining_guesses.zero?
+      puts "You lost with #{comp.remaining_guesses} guesses remaining. The secret word was #{secret_word.upcase}."
+    else
+      puts "You won! You guessed the secret word with #{comp.remaining_guesses} guesses remaining!"
+    end
   end
 end
 
