@@ -10,32 +10,23 @@ def new_or_load?
 end
 
 def load_game
-  begin
-    name = choose_game
-    saved_game = File.open("saved/#{name}.yaml", 'r')
-    loaded_game = YAML.load(saved_game, permitted_classes: [Game, Computer, Display])
-    puts "Game #{name} loaded!"
-    saved_game.close
-    loaded_game
-  rescue StandardError => e
-    puts e
-    retry
-  end
+  name = choose_game
+  saved_game = File.open("saved/#{name}.yaml", 'r')
+  loaded_game = YAML.load(saved_game, permitted_classes: [Game, Computer, Display])
+  puts "Game #{name} loaded!"
+  saved_game.close
+  loaded_game
 end
 
 def save_game(game)
-  name = name_game
+  puts 'Name your saved game:'
+  name = gets.chomp
   Dir.mkdir('saved') unless Dir.exist?('saved')
   filename = "saved/#{name}.yaml"
 
   File.open(filename, 'w') do |file|
     file.write YAML.dump(game)
   end
-end
-
-def name_game
-  puts 'Name your saved game:'
-  gets.chomp
 end
 
 def choose_game
@@ -54,7 +45,7 @@ end
 game = new_or_load? == '1' ? Game.new : load_game
 
 until game.game_over?
-  if game.get_guess_or_save == 'save'
+  if game.choose_save_or_guess == 'save'
     if save_game(game)
       puts 'Game saved!'
       break

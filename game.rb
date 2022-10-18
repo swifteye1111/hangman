@@ -15,19 +15,23 @@ class Game
     @computer.send_outcome(@display) if @computer.game_over?
   end
 
-  def get_guess_or_save
+  def choose_save_or_guess
     @display.show_display(@computer)
     puts 'Choose a letter or type "1" to save your game:'
     choice = gets.chomp
     if choice == '1'
       'save'
     else
-      until ('a'..'z').include?(choice) && @computer.letters_guessed.exclude?(choice)
-        puts select_output(choice)
-        choice = gets.chomp.downcase
-      end
-      play_round(choice)
+      make_guess(choice)
     end
+  end
+
+  def make_guess(choice)
+    until ('a'..'z').include?(choice) && @computer.letters_guessed.exclude?(choice)
+      puts select_output(choice)
+      choice = gets.chomp.downcase
+    end
+    play_round(choice)
   end
 
   def select_output(choice)

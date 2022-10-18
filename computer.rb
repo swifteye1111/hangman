@@ -29,7 +29,7 @@ class Computer
   def game_over?
     return true if @visible_letters == @secret_word || @remaining_guesses.zero?
 
-    return false
+    false
   end
 
   def send_outcome(display)
