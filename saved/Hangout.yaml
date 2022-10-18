@@ -1,0 +1,9 @@
+--- !ruby/object:Game
+computer: !ruby/object:Computer
+  secret_word: riding
+  visible_letters: ri_i__
+  remaining_guesses: 8
+  letters_guessed:
+  - r
+  - i
+display: !ruby/object:Display {}

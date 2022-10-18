@@ -1,0 +1,8 @@
+--- !ruby/object:Game
+computer: !ruby/object:Computer
+  secret_word: township
+  visible_letters: ___n____
+  remaining_guesses: 9
+  letters_guessed:
+  - "n"
+display: !ruby/object:Display {}

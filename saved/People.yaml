@@ -1,0 +1,8 @@
+--- !ruby/object:Game
+computer: !ruby/object:Computer
+  secret_word: trackback
+  visible_letters: ___c___c_
+  remaining_guesses: 9
+  letters_guessed:
+  - c
+display: !ruby/object:Display {}

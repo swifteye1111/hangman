@@ -1,0 +1,10 @@
+--- !ruby/object:Game
+computer: !ruby/object:Computer
+  secret_word: preparing
+  visible_letters: prep_r___
+  remaining_guesses: 7
+  letters_guessed:
+  - e
+  - p
+  - r
+display: !ruby/object:Display {}

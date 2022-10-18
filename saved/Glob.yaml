@@ -1,0 +1,8 @@
+--- !ruby/object:Game
+computer: !ruby/object:Computer
+  secret_word: integrity
+  visible_letters: ___e_____
+  remaining_guesses: 9
+  letters_guessed:
+  - e
+display: !ruby/object:Display {}
