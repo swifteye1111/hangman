@@ -27,7 +27,7 @@ class Game
   end
 
   def make_guess(choice)
-    until ('a'..'z').include?(choice) && @computer.letters_guessed.exclude?(choice)
+    until ('a'..'z').include?(choice) && !@computer.letters_guessed.include?(choice)
       puts select_output(choice)
       choice = gets.chomp.downcase
     end
